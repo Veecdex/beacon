@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Beacon — find each other, live</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- LANDING -->
+  <section id="view-landing" class="view view--active">
+    <div class="card card--landing">
+      <div class="mark">
+        <span class="mark__dot mark__dot--a"></span>
+        <span class="mark__dot mark__dot--b"></span>
+      </div>
+      <h1 class="headline">Beacon</h1>
+      <p class="lede">Share your live location with exactly one other person. Watch the distance between you close as you get near.</p>
+
+      <button id="btn-start" class="btn btn--primary">Start a beacon</button>
+
+      <div class="divider"><span>or</span></div>
+
+      <form id="form-join" class="join-form">
+        <input id="input-code" class="input input--code" type="text" inputmode="text" maxlength="5" placeholder="ENTER CODE" autocomplete="off" />
+        <button type="submit" class="btn btn--ghost">Join with a code</button>
+      </form>
+
+      <p id="landing-error" class="error-text" hidden></p>
+    </div>
+  </section>
+
+  <!-- ONBOARDING -->
+  <section id="view-onboarding" class="view">
+    <div class="card card--ticket">
+      <div class="ticket-head">
+        <p class="eyebrow-free">Room <strong id="onboarding-code">—</strong></p>
+        <h2 class="headline headline--sm">Who's meeting up?</h2>
+      </div>
+
+      <div class="perforation"><span class="notch notch--left"></span><span class="notch notch--right"></span></div>
+
+      <div class="ticket-body">
+        <label class="field">
+          <span class="field__label">Your name</span>
+          <input id="input-name" class="input" type="text" placeholder="Your name" maxlength="40" autocomplete="off" />
+        </label>
+
+        <label class="field field--photo">
+          <span class="field__label">A photo</span>
+          <div class="photo-picker">
+            <div id="photo-preview" class="photo-preview">
+              <svg viewBox="0 0 24 24" class="photo-preview__icon"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg>
+            </div>
+            <input id="input-photo" type="file" accept="image/*" capture="user" hidden />
+            <button id="btn-photo" type="button" class="btn btn--ghost btn--sm">Add a photo</button>
+          </div>
+        </label>
+
+        <label class="field">
+          <span class="field__label">Location access</span>
+          <button id="btn-location" type="button" class="btn btn--ghost btn--sm">Turn on location</button>
+          <p id="location-status" class="hint">Needed so your partner can see where you are.</p>
+        </label>
+      </div>
+
+      <button id="btn-onboarding-continue" class="btn btn--primary" disabled>Choose your point</button>
+      <p id="onboarding-error" class="error-text" hidden></p>
+    </div>
+  </section>
+
+  <!-- ADDRESS PICKER -->
+  <section id="view-address" class="view">
+    <div class="card card--address">
+      <h2 class="headline headline--sm">Drop a pin where you'll start</h2>
+      <p class="lede lede--tight">Search for an address or drag the pin. Your live position still updates from GPS once you're on the map.</p>
+
+      <div class="search-row">
+        <input id="input-address-search" class="input" type="text" placeholder="Search for an address" autocomplete="off" />
+        <button id="btn-address-search" type="button" class="btn btn--ghost btn--sm">Search</button>
+      </div>
+
+      <div id="map-address" class="map map--picker"></div>
+
+      <p id="address-label" class="address-readout">Locating you…</p>
+
+      <button id="btn-confirm-address" class="btn btn--primary">Confirm and go live</button>
+      <p id="address-error" class="error-text" hidden></p>
+    </div>
+  </section>
+
+  <!-- LIVE -->
+  <section id="view-live" class="view">
+    <div id="map-live" class="map map--live"></div>
+
+    <div class="distance-pill" id="distance-pill" hidden>
+      <span id="distance-value">—</span>
+    </div>
+
+    <div class="waiting-panel" id="waiting-panel" hidden>
+      <p class="waiting-panel__title">Waiting for your partner</p>
+      <p class="waiting-panel__body">Share this code so they can join:</p>
+      <button id="btn-copy-code" class="code-chip" type="button"><span id="live-code">—</span><span class="code-chip__copy">Copy</span></button>
+    </div>
+
+    <div class="roster" id="roster" hidden></div>
+
+    <p id="live-error" class="error-text error-text--floating" hidden></p>
+  </section>
+
+</div>
+
+<!-- Set this to your deployed Cloudflare Worker URL before going live -->
+<script>window.BEACON_API_BASE = "http://127.0.0.1:8787";</script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
