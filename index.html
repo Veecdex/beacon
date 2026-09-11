@@ -10,92 +10,75 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <div class="app">
 
-  <!-- LANDING -->
-  <section id="view-landing" class="view view--active">
-    <div class="card card--landing">
+  <!-- AUTH -->
+  <section id="view-auth" class="view view--active">
+    <div class="card card--auth">
       <div class="mark">
         <span class="mark__dot mark__dot--a"></span>
         <span class="mark__dot mark__dot--b"></span>
       </div>
       <h1 class="headline">Beacon</h1>
-      <p class="lede">Share your live location with exactly one other person. Watch the distance between you close as you get near.</p>
+      <p class="lede">Share your live location with exactly one other person, and watch the distance between you close.</p>
+
+      <div class="tabs" role="tablist">
+        <button id="tab-login" class="tab is-active" type="button">Log in</button>
+        <button id="tab-signup" class="tab" type="button">Sign up</button>
+      </div>
+
+      <form id="form-login" class="auth-form">
+        <input class="input" type="email" id="login-email" placeholder="Email" autocomplete="email" required />
+        <input class="input" type="password" id="login-password" placeholder="Password" autocomplete="current-password" required />
+        <button type="submit" class="btn btn--primary">Log in</button>
+      </form>
+
+      <form id="form-signup" class="auth-form" hidden>
+        <input class="input" type="text" id="signup-name" placeholder="Your name" maxlength="40" autocomplete="name" required />
+        <input class="input" type="email" id="signup-email" placeholder="Email" autocomplete="email" required />
+        <input class="input" type="password" id="signup-password" placeholder="Password (min 8 characters)" autocomplete="new-password" minlength="8" required />
+
+        <label class="photo-picker">
+          <div id="signup-photo-preview" class="photo-preview">
+            <svg viewBox="0 0 24 24" class="photo-preview__icon"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg>
+          </div>
+          <input id="signup-photo-input" type="file" accept="image/*" hidden />
+          <span class="btn btn--ghost btn--sm">Add a photo</span>
+        </label>
+
+        <button type="submit" class="btn btn--primary">Create account</button>
+      </form>
+
+      <p id="auth-error" class="error-text" hidden></p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="view-dashboard" class="view">
+    <button id="btn-logout" class="btn-logout" type="button">Log out</button>
+    <div class="card card--dashboard">
+      <p class="eyebrow-free">Hey <strong id="dashboard-name">there</strong></p>
+      <h2 class="headline headline--sm">Who are you meeting?</h2>
+
+      <div id="pending-join" class="pending-join" hidden>
+        <p>You've got an invite to join <strong id="pending-join-code">—</strong>.</p>
+        <button id="btn-pending-join" class="btn btn--primary" type="button">Join this beacon</button>
+      </div>
 
       <button id="btn-start" class="btn btn--primary">Start a beacon</button>
 
       <div class="divider"><span>or</span></div>
 
       <form id="form-join" class="join-form">
-        <input id="input-code" class="input input--code" type="text" inputmode="text" maxlength="5" placeholder="ENTER CODE" autocomplete="off" />
+        <input id="input-code" class="input input--code" type="text" maxlength="5" placeholder="ENTER CODE" autocomplete="off" />
         <button type="submit" class="btn btn--ghost">Join with a code</button>
       </form>
 
-      <p id="landing-error" class="error-text" hidden></p>
-    </div>
-  </section>
-
-  <!-- ONBOARDING -->
-  <section id="view-onboarding" class="view">
-    <div class="card card--ticket">
-      <div class="ticket-head">
-        <p class="eyebrow-free">Room <strong id="onboarding-code">—</strong></p>
-        <h2 class="headline headline--sm">Who's meeting up?</h2>
-      </div>
-
-      <div class="perforation"><span class="notch notch--left"></span><span class="notch notch--right"></span></div>
-
-      <div class="ticket-body">
-        <label class="field">
-          <span class="field__label">Your name</span>
-          <input id="input-name" class="input" type="text" placeholder="Your name" maxlength="40" autocomplete="off" />
-        </label>
-
-        <label class="field field--photo">
-          <span class="field__label">A photo</span>
-          <div class="photo-picker">
-            <div id="photo-preview" class="photo-preview">
-              <svg viewBox="0 0 24 24" class="photo-preview__icon"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg>
-            </div>
-            <input id="input-photo" type="file" accept="image/*" capture="user" hidden />
-            <button id="btn-photo" type="button" class="btn btn--ghost btn--sm">Add a photo</button>
-          </div>
-        </label>
-
-        <label class="field">
-          <span class="field__label">Location access</span>
-          <button id="btn-location" type="button" class="btn btn--ghost btn--sm">Turn on location</button>
-          <p id="location-status" class="hint">Needed so your partner can see where you are.</p>
-        </label>
-      </div>
-
-      <button id="btn-onboarding-continue" class="btn btn--primary" disabled>Choose your point</button>
-      <p id="onboarding-error" class="error-text" hidden></p>
-    </div>
-  </section>
-
-  <!-- ADDRESS PICKER -->
-  <section id="view-address" class="view">
-    <div class="card card--address">
-      <h2 class="headline headline--sm">Drop a pin where you'll start</h2>
-      <p class="lede lede--tight">Search for an address or drag the pin. Your live position still updates from GPS once you're on the map.</p>
-
-      <div class="search-row">
-        <input id="input-address-search" class="input" type="text" placeholder="Search for an address" autocomplete="off" />
-        <button id="btn-address-search" type="button" class="btn btn--ghost btn--sm">Search</button>
-      </div>
-
-      <div id="map-address" class="map map--picker"></div>
-
-      <p id="address-label" class="address-readout">Locating you…</p>
-
-      <button id="btn-confirm-address" class="btn btn--primary">Confirm and go live</button>
-      <p id="address-error" class="error-text" hidden></p>
+      <p id="dashboard-error" class="error-text" hidden></p>
     </div>
   </section>
 
@@ -103,14 +86,36 @@
   <section id="view-live" class="view">
     <div id="map-live" class="map map--live"></div>
 
+    <button id="btn-live-back" class="map-back-btn" type="button">←</button>
+
     <div class="distance-pill" id="distance-pill" hidden>
       <span id="distance-value">—</span>
     </div>
 
+    <div class="permission-primer" id="permission-primer" hidden>
+      <p class="permission-primer__title">Share your location</p>
+      <p class="permission-primer__body">Your partner will be able to see where you are on the map, live.</p>
+      <button id="btn-share-location" class="btn btn--primary" type="button">Share my location</button>
+    </div>
+
+    <div class="permission-denied" id="permission-denied" hidden>
+      <p class="permission-denied__title">Location is turned off for this site</p>
+      <p class="permission-denied__body">Open your browser's site settings, allow Location for this page, then refresh. In the meantime you can set a rough starting point below.</p>
+    </div>
+
     <div class="waiting-panel" id="waiting-panel" hidden>
       <p class="waiting-panel__title">Waiting for your partner</p>
-      <p class="waiting-panel__body">Share this code so they can join:</p>
-      <button id="btn-copy-code" class="code-chip" type="button"><span id="live-code">—</span><span class="code-chip__copy">Copy</span></button>
+      <p class="waiting-panel__body">Share this code, or send them the link:</p>
+      <button id="btn-copy-code" class="code-chip" type="button"><span id="live-code">—</span><span class="code-chip__copy">Copy code</span></button>
+      <button id="btn-copy-link" class="code-chip code-chip--link" type="button"><span>Copy invite link</span></button>
+    </div>
+
+    <div class="manual-location" id="manual-location" hidden>
+      <button id="btn-manual-toggle" class="manual-location__toggle" type="button">Set my location by typing an address</button>
+      <div id="manual-location-form" class="manual-location__form" hidden>
+        <input id="input-manual-address" class="input" type="text" placeholder="Search for an address" autocomplete="off" />
+        <button id="btn-manual-search" class="btn btn--ghost btn--sm" type="button">Set</button>
+      </div>
     </div>
 
     <div class="roster" id="roster" hidden></div>
@@ -120,8 +125,8 @@
 
 </div>
 
-<!-- Set this to your deployed Cloudflare Worker URL before going live -->
-<script>window.BEACON_API_BASE = "http://127.0.0.1:8787";</script>
+<!-- Set this to your deployed Render backend URL before going live -->
+<script>window.BEACON_API_BASE = "http://127.0.0.1:8080";</script>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="app.js"></script>
